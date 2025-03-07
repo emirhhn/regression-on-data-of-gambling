@@ -1,0 +1,35 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+# data 
+years = np.array([2023, 2022, 2021, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]).reshape(-1, 1)
+gate_receipts = np.array([135, 130, 88, 154, 176, 180, 180, 172, 165, 129, 129, 110, 107])
+
+# polinom convert
+poly = PolynomialFeatures(degree=3)
+years_poly = poly.fit_transform(years)
+
+# poli regression
+model = LinearRegression()
+model.fit(years_poly, gate_receipts)
+
+# predict next years
+future_years = np.array([2024, 2025, 2026, 2027, 2028, 2029,2030,2031,2032,2033]).reshape(-1, 1)
+future_years_poly = poly.transform(future_years)
+predicted_receipts = model.predict(future_years_poly)
+
+# plot the graph
+plt.figure(figsize=(10, 6))
+plt.scatter(years, gate_receipts, color='blue', label='Data')
+plt.plot(years, model.predict(years_poly), color='red', linestyle="--", label='Polynomial regression')
+plt.xlabel("Year")
+plt.ylabel("Revenue (Million USD)")
+plt.title("Prediction on Gate receipts of San Francisco ")
+plt.legend()
+plt.show()
+
+# predicted data
+print(f"2024-2028 years Prediction on Gate receipts of San Francisco: {predicted_receipts}")
