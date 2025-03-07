@@ -1,0 +1,1 @@
+I am working on a projects which I am investigating on data of gambling addiction and its graphs. So I use machine learning to see what could be amount of money that will be spend in next years and show this data to people in a way they can easily understand. I use matplotlib for sketching predıcted graphs. 
