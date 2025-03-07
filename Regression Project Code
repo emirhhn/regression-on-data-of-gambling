@@ -1,35 +1,67 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import Ridge, Lasso
+from sklearn.model_selection import cross_val_score
+import seaborn as sns
+import pandas as pd
+# years and revenues
+years = [2023, 2022, 2021, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
+gate_receipts = [135, 130, 88, 154, 176, 180, 180, 172, 165, 129, 129, 110, 107]
 
-# data 
+# convert data to df
+data = pd.DataFrame({
+    'Year': years,
+    'Gate Receipts (Million USD)': gate_receipts
+})
+
+# show df
+print(data)
+
+# convert years to 2d array
 years = np.array([2023, 2022, 2021, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]).reshape(-1, 1)
 gate_receipts = np.array([135, 130, 88, 154, 176, 180, 180, 172, 165, 129, 129, 110, 107])
 
-# polinom convert
-poly = PolynomialFeatures(degree=3)
-years_poly = poly.fit_transform(years)
-
-# poli regression
+# generate lineer regression model
 model = LinearRegression()
-model.fit(years_poly, gate_receipts)
+model.fit(years, gate_receipts)
 
 # predict next years
 future_years = np.array([2024, 2025, 2026, 2027, 2028, 2029,2030,2031,2032,2033]).reshape(-1, 1)
-future_years_poly = poly.transform(future_years)
-predicted_receipts = model.predict(future_years_poly)
+predicted_receipts = model.predict(future_years)
 
-# plot the graph
-plt.figure(figsize=(10, 6))
+# draw graph
 plt.scatter(years, gate_receipts, color='blue', label='Data')
-plt.plot(years, model.predict(years_poly), color='red', linestyle="--", label='Polynomial regression')
-plt.xlabel("Year")
-plt.ylabel("Revenue (Million USD)")
-plt.title("Prediction on Gate receipts of San Francisco ")
+plt.plot(future_years, predicted_receipts, color='red', linestyle="--", label='Prediction')
+plt.xlabel("Years")
+plt.ylabel("Receipts (Millon USD)")
+plt.title("Predicted receipts for next years")
 plt.legend()
 plt.show()
 
 # predicted data
-print(f"2024-2028 years Prediction on Gate receipts of San Francisco: {predicted_receipts}")
+print(f"Predicted receipts for years of 2024-2028: {predicted_receipts}")
+
+
+# Generating polynomial regression model
+poly = PolynomialFeatures(degree=3)  # Buradaki degree değerini artırabilirsin
+X_poly = poly.fit_transform(years)
+
+# Train the model
+poly_model = LinearRegression()
+poly_model.fit(X_poly, gate_receipts)
+
+# Prediction
+future_X_poly = poly.transform(future_years)
+poly_predictions = poly_model.predict(future_X_poly)
+
+# Sketching results
+plt.scatter(years, gate_receipts, color='blue', label="real data")
+plt.plot(future_years, poly_predictions, color='green', linestyle='dashed', label="Polynomial predicton")
+plt.xlabel("Year")
+plt.ylabel("Gate Receipts (Million Dolar)")
+plt.legend()
+plt.show()
+
+
