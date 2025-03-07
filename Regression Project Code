@@ -45,7 +45,7 @@ print(f"Predicted receipts for years of 2024-2028: {predicted_receipts}")
 
 
 # Generating polynomial regression model
-poly = PolynomialFeatures(degree=3)  # Buradaki degree değerini artırabilirsin
+poly = PolynomialFeatures(degree=3)  
 X_poly = poly.fit_transform(years)
 
 # Train the model
